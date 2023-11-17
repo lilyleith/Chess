@@ -28,7 +28,6 @@ public class Rook extends Piece {
         if (start.getX() - end.getX() != 0) {
             int change = end.getX() - start.getX();
             if (change < 0) {
-                System.out.println("hello from change < 0");
                 System.out.println(change);
                 for (int i = 1; i < Math.abs(change); i++) {
                     System.out.println(board.getSpot(start.getX() - 1, start.getY()).getPiece().getPrintable());

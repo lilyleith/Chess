@@ -44,7 +44,11 @@ public class Game {
     }
 
     public boolean makeMove(Player p, Move move) {
-        
+        if (currentTurn.whiteSide) {
+            System.out.println("current turn is white side");
+        } else {
+            System.out.println("current turn is black side");
+        }
         Piece source = move.getStart().getPiece();
         
         // if there is actually a piece there
@@ -53,10 +57,12 @@ public class Game {
         }
 
         if (currentTurn != p) {
+            System.out.println("It's not your move!");
             return false;
         }
 
         if (source.isWhite() != p.isWhiteSide()) {
+            System.out.println("Souce piece doesn't belong to you!");
             return false;
         }
 

@@ -17,12 +17,10 @@ public class Pawn extends Piece {
 
         System.out.println(this.isWhite());
         if (this.isWhite()) {
-            System.out.println("hello 2");
             if (end.getX() - start.getX() > 0) {
                 System.out.println("hello 1");
                 return false;
             } else {
-                System.out.println("hello from else in pawn, start x : " + start.getX() + " start y: " + start.getY());
                 if (end.getX() - start.getX() == -1 && end.getY() == start.getY()) {
                     if (!board.getSpot(end.getX(),start.getY()).getPiece().getPrintable().equals(" ")) {
                         return false;
