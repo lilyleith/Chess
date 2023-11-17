@@ -14,11 +14,15 @@ public class tester {
         game.printGame();
 
         Player currentPlayer = players[0];
+        System.out.println("You are white. Move!");
         while(true) {
-            System.out.println("Enter move x, y to x, y");
+            System.out.println("Enter move in the form <startx> <starty> <endx> <endy>");
             String[] input = in.nextLine().split(" ");
             System.out.println(Integer.valueOf(input[0]));
-            game.playerMove(currentPlayer, Integer.valueOf(input[0]), Integer.valueOf(input[1]), Integer.valueOf(input[2]), Integer.valueOf(input[3]));
+            if (!game.playerMove(currentPlayer, Integer.valueOf(input[0]), Integer.valueOf(input[1]), Integer.valueOf(input[2]), Integer.valueOf(input[3]))) {
+                System.out.println("Play ignored!");
+                continue;
+            }
             game.printGame();
             System.out.println();
 

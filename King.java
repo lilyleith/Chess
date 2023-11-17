@@ -132,7 +132,6 @@ public class King extends Piece {
                         break;
                     } else {
                         if (board.getSpot(checkX, checkY).getPiece().canMove(board, board.getSpot(checkX, checkY), end)) {
-                            System.out.println("Piece " + checkX + " , " + checkY + " puts the king in check");
                             return true;
                         }
                     }
