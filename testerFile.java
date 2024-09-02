@@ -1,11 +1,15 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class tester {
+public class testerFile {
     
     public static void main(String[] args) throws Exception {
         Player[] players = new Player[2];
         
-        Scanner in = new Scanner(System.in);
+        File testFile = new File("testcheck.txt");
+        Scanner in = new Scanner(testFile);
+
         Player p1 = new Player(true);
         Player p2 = new Player(false);
         players[0] = p1;
@@ -14,11 +18,11 @@ public class tester {
         game.printGame();
 
         Player currentPlayer = players[0];
-        System.out.println("You are white. Move!");
+        //System.out.println("You are white. Move!");
         while(true) {
-            System.out.println("Enter move in the form <startx> <starty> <endx> <endy>");
             String[] input = in.nextLine().split(" ");
-            System.out.println(Integer.valueOf(input[0]));
+            System.out.println("Move: " + input[0] + "," + input[1] + " to " + input[2] +"," + input[3]);
+            
             if (!game.playerMove(currentPlayer, Integer.valueOf(input[0]), Integer.valueOf(input[1]), Integer.valueOf(input[2]), Integer.valueOf(input[3]))) {
                 System.out.println("Play ignored!");
                 continue;

@@ -1,0 +1,6 @@
+9.02.24 TODO:
+-initialize a check hold on moves from the side in check
+    - need to check if either side is in check after every move
+    - notification of check if other player is in check: this is done in
+    - denial of move if current player is in check: this is done inside the makemove function
+-create method for batch testing - testerFile.java

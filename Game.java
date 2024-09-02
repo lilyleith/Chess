@@ -14,8 +14,12 @@ public class Game {
 
         if (p1.isWhiteSide()) {
             this.currentTurn = p1;
+            this.players[0].setKingLoc(7, 4);
+            this.players[1].setKingLoc(0, 4);
         } else {
             this.currentTurn = p2;
+            this.players[1].setKingLoc(7, 4);
+            this.players[0].setKingLoc(0, 4);
         }
 
         whiteCaptures = "";
@@ -101,9 +105,52 @@ public class Game {
         }
 
         
+
+        
         // set the end spot to the source piece
         move.getEnd().setPiece(move.getStart().getPiece());
         move.getStart().setPiece(new Empty(false, " "));
+
+        Integer[] oldKingLoc = new Integer[2];
+        oldKingLoc[0] = move.getStart().getX();
+        oldKingLoc[1] = move.getStart().getY(); 
+        // check if either player is in check:
+        if (source.getPrintable().equals("K")) {
+            
+            if (this.currentTurn == players[0]) {
+                this.players[0].setKingLoc(move.getEnd().getX(), move.getEnd().getY());
+            } else {
+                this.players[1].setKingLoc(move.getEnd().getX(), move.getEnd().getY());
+            }
+
+        }
+
+        // if the current player put themselves in check, undo the action
+        if(inCheck(p)) {
+            System.out.println("You put yourself in check! This is not allowed.");
+            // reset the king location of the current player
+            if (this.currentTurn == players[0]) {
+                players[0].setKingLoc(oldKingLoc[0], oldKingLoc[1]);
+            } else {
+                players[1].setKingLoc(oldKingLoc[0], oldKingLoc[1]);
+            }
+
+            // reset the board
+            move.getEnd().setPiece(targetPiece);
+            move.getStart().setPiece(source);
+        }
+
+        if (this.currentTurn == this.players[0]) {
+            if (inCheck(this.players[1])) {
+                System.out.println("You put the other side in check! Good job!");
+            } 
+        } else {
+            if (inCheck(this.players[0])) {
+                System.out.println("You put the other side in check! Good job!");
+            }
+        }
+
+
 
         if (targetPiece.getPrintable().equals("K")) {
             if (p.isWhiteSide()) {
@@ -121,6 +168,93 @@ public class Game {
         
         return true;
     }
+
+    // check if the current player is in check
+    public boolean inCheck(Player p) {
+
+        // multipliers for checking the area around the king in all directions
+        int[][] multipliers = {{1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1,-1}, {-1, 0}, {-1, 1}, {0, 1}};
+        int xMultiplier;
+        int yMultiplier;
+
+        // the spots that we are checking
+        int checkX;
+        int checkY;
+
+        int i;
+        boolean noPiece;
+
+        // to iterate through the 2 players
+        
+
+    
+        int targetX = p.getKingX();
+        int targetY = p.getKingY();
+
+        for (int m = 0; m < 8; m++) {
+            xMultiplier = multipliers[m][0];
+            yMultiplier = multipliers[m][1];
+            noPiece = true;
+            i = 1;
+            while(noPiece) {
+                checkX = targetX + i * xMultiplier;
+                checkY = targetY + i * yMultiplier;
+                if (checkX > 7 || checkX < 0 || checkY > 7 || checkY < 0) {
+                    break;
+                }
+                if (!board.getSpot(checkX, checkY).getPiece().getPrintable().equals(" ")) {
+                    if (board.getSpot(checkX, checkY).getPiece().isWhite() == p.isWhiteSide()) {
+                        break;
+                    } else {
+                        if (board.getSpot(checkX, checkY).getPiece().canMove(board, board.getSpot(checkX, checkY), board.getSpot(targetX, targetY))) {
+                            if (p.isWhiteSide()) {
+                                System.out.println("The black " + board.getSpot(checkX, checkY).getPiece().getPrintable() + " puts the white King in check!");
+
+                            } else {
+                                System.out.println("The white " + board.getSpot(checkX, checkY).getPiece().getPrintable() + " puts black the King in check!");
+                            }
+                            return true;
+                        }
+                    }
+                }
+                i++;
+            }
+
+        }
+
+        /*
+        * knight adders:
+        * horiz down right x+1 y+2
+        * vert down right x+2 y+1
+        * vert down left x+2 y-1
+        * horiz down left x+1 y-2
+        * horiz up left x-1 y-2
+        * vert up left x-2 y-1
+        * vert up right x-2 y+1
+        * horiz up right x-1 y+2
+        */
+
+        int[][] knightAdders = {{1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}, {-2, -1}, {-2, 1}, {-1, 2}};
+        int xAdder;
+        int yAdder;
+        for (int m = 0; m < 8; m++) {
+            xAdder = knightAdders[m][0];
+            yAdder = knightAdders[m][1];
+            checkX = targetX + xAdder;
+            checkY = targetY + yAdder;
+            if (checkX > 7 || checkX < 0 || checkY > 7 || checkY < 0) {
+                continue;
+            }
+            if (board.getSpot(checkX, checkY).getPiece().getPrintable().equals("k") && 
+            board.getSpot(checkX, checkY).getPiece().isWhite() != p.isWhiteSide()) {
+                System.out.println("the knight would put the king in check, cant move");
+                return true;
+            }
+        }
+        
+        return false;
+        
+    }   
 
 
 }

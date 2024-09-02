@@ -30,9 +30,9 @@ public class King extends Piece {
 
         // check that the target spot is not out of range of the source piece
         if (Math.abs(start.getX() - end.getX()) <= 1 && Math.abs(start.getY() - end.getY()) <= 1) {
-            if (this.putsKingInCheck(board, start, end)) {
-                return false;
-            }
+            // if (this.putsKingInCheck(board, start, end)) {
+            //     return false;
+            // }
             return true;
         }
         boolean validCastle = isValidCastle(board, start, end);
@@ -87,92 +87,93 @@ public class King extends Piece {
         return true;
     }
 
-    public boolean putsKingInCheck(Board board, Spot start, Spot end) {
-        /*
-        * to check if king would be in check:
-        * check surrounding area: go as far as you can in all directions
-        * when you hit a piece, check if that piece is a valid move to kings target
-        * knights: do later
-        * make sure not out of bounds
-        * keep multipliers in an array
-        diagonal x+ y+
-        vertical x+ y0
-        diagonal x+ y-
-        horizontal x0 y-
-        diagonal x- y-
-        vertical x- y0
-        diagonal x- y+
-        horizontal x0 y+
-        BASE IS THE TARGET SPOT
-        */
+    // public boolean putsKingInCheck(Board board, Spot start, Spot end) {
+    //     /*
+    //     * to check if king would be in check:
+    //     * check surrounding area: go as far as you can in all directions
+    //     * when you hit a piece, check if that piece is a valid move to kings target
+    //     * knights: do later
+    //     * make sure not out of bounds
+    //     * keep multipliers in an array
+    //     diagonal x+ y+
+    //     vertical x+ y0
+    //     diagonal x+ y-
+    //     horizontal x0 y-
+    //     diagonal x- y-
+    //     vertical x- y0
+    //     diagonal x- y+
+    //     horizontal x0 y+
+    //     BASE IS THE TARGET SPOT
+    //     */
 
-        int[][] multipliers = {{1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1,-1}, {-1, 0}, {-1, 1}, {0, 1}};
-        int xMultiplier;
-        int yMultiplier;
-        int targetX = end.getX();
-        int targetY = end.getY();
-        int checkX;
-        int checkY;
-        int i;
-        boolean noPiece;
+    //     int[][] multipliers = {{1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1,-1}, {-1, 0}, {-1, 1}, {0, 1}};
+    //     int xMultiplier;
+    //     int yMultiplier;
+    //     int targetX = end.getX();
+    //     int targetY = end.getY();
+    //     int checkX;
+    //     int checkY;
+    //     int i;
+    //     boolean noPiece;
 
-        for (int m = 0; m < 8; m++) {
-            xMultiplier = multipliers[m][0];
-            yMultiplier = multipliers[m][1];
-            noPiece = true;
-            i = 1;
-            while(noPiece) {
-                checkX = targetX + i * xMultiplier;
-                checkY = targetY + i * yMultiplier;
-                if (checkX > 7 || checkX < 0 || checkY > 7 || checkY < 0) {
-                    break;
-                }
-                if (!board.getSpot(checkX, checkY).getPiece().getPrintable().equals(" ")) {
-                    if (board.getSpot(checkX, checkY).getPiece().isWhite() == this.isWhite()) {
-                        break;
-                    } else {
-                        if (board.getSpot(checkX, checkY).getPiece().canMove(board, board.getSpot(checkX, checkY), end)) {
-                            return true;
-                        }
-                    }
-                }
-                i++;
-            }
+    //     for (int m = 0; m < 8; m++) {
+    //         xMultiplier = multipliers[m][0];
+    //         yMultiplier = multipliers[m][1];
+    //         noPiece = true;
+    //         i = 1;
+    //         while(noPiece) {
+    //             checkX = targetX + i * xMultiplier;
+    //             checkY = targetY + i * yMultiplier;
+    //             if (checkX > 7 || checkX < 0 || checkY > 7 || checkY < 0) {
+    //                 break;
+    //             }
+    //             if (!board.getSpot(checkX, checkY).getPiece().getPrintable().equals(" ")) {
+    //                 if (board.getSpot(checkX, checkY).getPiece().isWhite() == this.isWhite()) {
+    //                     break;
+    //                 } else {
+    //                     if (board.getSpot(checkX, checkY).getPiece().canMove(board, board.getSpot(checkX, checkY), end)) {
+    //                         System.out.println("The " + board.getSpot(checkX, checkY).getPiece().getPrintable() + " puts the King in check!");
+    //                         return true;
+    //                     }
+    //                 }
+    //             }
+    //             i++;
+    //         }
 
-        }
+    //     }
 
-        /*
-         * knight adders:
-         * horiz down right x+1 y+2
-         * vert down right x+2 y+1
-         * vert down left x+2 y-1
-         * horiz down left x+1 y-2
-         * horiz up left x-1 y-2
-         * vert up left x-2 y-1
-         * vert up right x-2 y+1
-         * horiz up right x-1 y+2
-         */
+    //     /*
+    //      * knight adders:
+    //      * horiz down right x+1 y+2
+    //      * vert down right x+2 y+1
+    //      * vert down left x+2 y-1
+    //      * horiz down left x+1 y-2
+    //      * horiz up left x-1 y-2
+    //      * vert up left x-2 y-1
+    //      * vert up right x-2 y+1
+    //      * horiz up right x-1 y+2
+    //      */
 
-        int[][] knightAdders = {{1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}, {-2, -1}, {-2, 1}, {-1, 2}};
-        int xAdder;
-        int yAdder;
-        for (int m = 0; m < 8; m++) {
-            xAdder = knightAdders[m][0];
-            yAdder = knightAdders[m][1];
-            checkX = targetX + xAdder;
-            checkY = targetY + yAdder;
-            if (checkX > 7 || checkX < 0 || checkY > 7 || checkY < 0) {
-                continue;
-            }
-            if (board.getSpot(checkX, checkY).getPiece().getPrintable().equals("k") && 
-            board.getSpot(checkX, checkY).getPiece().isWhite() != this.isWhite()) {
-                System.out.println("the knight would put the king in check, cant move");
-                return true;
-            }
-        }
+    //     int[][] knightAdders = {{1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}, {-2, -1}, {-2, 1}, {-1, 2}};
+    //     int xAdder;
+    //     int yAdder;
+    //     for (int m = 0; m < 8; m++) {
+    //         xAdder = knightAdders[m][0];
+    //         yAdder = knightAdders[m][1];
+    //         checkX = targetX + xAdder;
+    //         checkY = targetY + yAdder;
+    //         if (checkX > 7 || checkX < 0 || checkY > 7 || checkY < 0) {
+    //             continue;
+    //         }
+    //         if (board.getSpot(checkX, checkY).getPiece().getPrintable().equals("k") && 
+    //         board.getSpot(checkX, checkY).getPiece().isWhite() != this.isWhite()) {
+    //             System.out.println("the knight would put the king in check, cant move");
+    //             return true;
+    //         }
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
 
     
 
